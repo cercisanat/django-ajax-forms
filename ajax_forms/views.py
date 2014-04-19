@@ -1,10 +1,12 @@
+import json
+
 from django import forms
 from django.http import HttpResponse
-from django.utils import simplejson
 from django.forms.formsets import BaseFormSet
 from django.views.generic.edit import BaseCreateView
 from django.views.generic import FormView
 from django.views.generic.edit import TemplateResponseMixin
+from django.core import serializers
 
 FORM_SUBMITTED = "valid_submit"
 
@@ -18,7 +20,7 @@ class JSONResponseMixin(object):
                             **httpresponse_kwargs)
 
     def convert_context_to_json(self, context):
-        return simplejson.dumps(context)
+        return json.dumps(context)
 
 
 class RealSubmitMixin(object):
@@ -46,6 +48,7 @@ class AjaxValidModelFormMixin(RealSubmitMixin):
     def singleObjectModelToDict(self, object):
         subObject = object.__dict__
         del subObject['_state']
+        subObject = serializers.serialize('json', [object])
         return subObject
 
     def form_valid(self, form):
