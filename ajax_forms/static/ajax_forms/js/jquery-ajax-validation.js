@@ -38,7 +38,7 @@
                         }
                         $form.find('ul.errorlist').remove();
                         if(formSuccessCallback) {
-                            formSuccessCallback();
+                            formSuccessCallback($form);
                         }
                     } else {
                         if (settings.callback)  {
