@@ -2,7 +2,7 @@
     function inputs(form)   {
         return form.find(":input:visible:not(:button)");
     }
-    $.fn.validate = function(url, settings) {
+    $.fn.validate = function(settings) {
         settings = $.extend({
             type: 'ul',
             callback: false,
@@ -19,6 +19,7 @@
         }, settings);
 
         function ajaxForm(form, data, field, formSuccessCallback) {
+            var $form = $(form);
             var field = field || false;
             var formSuccessCallback = formSuccessCallback || false;
             $.ajax({
@@ -35,13 +36,13 @@
                         if(settings.fieldSuccessCallback) {
                             settings.fieldSuccessCallback($('#' + field));
                         }
-                        $(form).find('ul.errorlist').remove();
+                        $form.find('ul.errorlist').remove();
                         if(formSuccessCallback) {
                             formSuccessCallback();
                         }
                     } else {
                         if (settings.callback)  {
-                            settings.callback($(form), data);
+                            settings.callback($form, data);
                         }
                         else    {
                             var get_form_error_position = function(key) {
@@ -144,28 +145,28 @@
                     }
                 },
                 type: 'POST',
-                url: url
+                url: $form.attr('action')
             });
         }
 
 
         if(settings.event != 'submit') {
             if(Object.prototype.toString.call(settings.fields)  == '[object Array]') {
-                var form = $(this);
+                var $form = $(this);
                 $(settings.fields).each(function(i,el) {
                     $('#' + el).each(function(index, el) {
                         $(el).on(settings.event, function(event) {
                             field = $(this).attr("id");
-                            ajaxForm($(form), $(form).serialize(), field, null);
+                            ajaxForm($form, $form.serialize(), field, null);
                         });
                     });
                 });
             } else {
-                var form = $(this);
+                var $form = $(this);
                 $('input, checkbox, select, textarea',this).not('input[type=submit]').each(function(index, el) {
                     $(el).on(settings.event, function(event) {
                         field = $(this).attr("id");
-                        ajaxForm($(form), $(form).serialize(), field, null);
+                        ajaxForm($form, $form.serialize(), field, null);
                     });
                 });
             }

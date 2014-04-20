@@ -3,8 +3,7 @@
     {% include_validation %}
 <script type="text/javascript">
     $(function()    {
-            $('#form').validate('{% url contact_form %}', 
-                { 
+            $('#form').validate({ 
                     type: 'p', 
                     fields: true, 
                     event: 'focusout', 
@@ -24,7 +23,7 @@
             );
     });
 </script>
-<form id="form" method="POST">{% csrf_token %}
+<form id="form" method="POST" action="{% url contact_form %}">{% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="go"/>
 </form>
