@@ -141,6 +141,39 @@
                                     }
                                 });
                             }
+                            if (settings.type == 'bootstrap')    {
+                                if(!data.errors[field] && settings.fieldSuccessCallback) {
+                                    $('#' + field).parent().prev('ul.errorlist').remove();
+                                    settings.fieldSuccessCallback($('#' + field));
+                                }
+                                $.each(data.errors, function(key, val)  {
+                                    if (key.indexOf('__all__') >= 0)   {
+                                        var error = get_form_error_position(key);
+                                        if (error.prev().is('ul.errorlist')) {
+                                            error.prev().before('<ul class="errorlist"><li>' + val + '</li></ul>');
+                                        }
+                                    }
+                                    else {
+                                        if(field) { 
+                                            if(field == key && $('#' + field).val().length > 0) {
+                                                if(settings.fieldInvalidCallback) {
+                                                    settings.fieldInvalidCallback($('#' + field));
+                                                }
+                                                $('#' + field).closest('.controls').addClass('error');
+                                                $('#' + field).parent().find('ul.errorlist').remove();
+                                                $('#' + key).parent().append('<ul class="errorlist"><li>' + val + '</li></ul>');
+                                            }
+                                        } else {
+                                            if(settings.fieldInvalidCallback) {
+                                                settings.fieldInvalidCallback($('#' + field));
+                                            }
+                                            $('#' + field).closest('.controls').addClass('error');
+                                            $('#' + field).parent().find('ul.errorlist').remove();
+                                            $('#' + key).parent().append('<ul class="errorlist"><li>' + val + '</li></ul>');
+                                        }
+                                    }
+                                });
+                            }
                         }
                     }
                 },
